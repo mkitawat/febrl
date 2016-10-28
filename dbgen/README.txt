@@ -8,7 +8,7 @@ see Chapter 'Auxiliary Programs' in the Febrl manual.
 
 1) dataset1.csv
 
-   python generate.py dataset1.csv 500 500 1 uniform
+   python generate.py febrl_001_500_500_1_u.csv 500 500 1 uniform
 
    This data set contains 1000 records (500 original and 500
    duplicates, with exactly one duplicate per original record.
@@ -16,7 +16,7 @@ see Chapter 'Auxiliary Programs' in the Febrl manual.
 
 2) dataset2.csv
 
-   python generate.py dataset2.csv 4000 1000 5 poisson
+   python generate.py febrl_002_4000_1000_5_p.csv 4000 1000 5 poisson
 
    This data set contains 5000 records (4000 originals and 1000
    duplicates), with a maximum of 5 duplicates based on one original
@@ -32,7 +32,7 @@ see Chapter 'Auxiliary Programs' in the Febrl manual.
 
 3) dataset3.csv
 
-   python generate.py dataset3.csv 2000 3000 5 zipf
+   python generate.py febrl_003_2000_3000_5_z.csv 2000 3000 5 zipf
 
    This data set contains 5000 records (2000 originals and 3000
    duplicates), with a maximum of 5 duplicates based on one original
@@ -48,7 +48,7 @@ see Chapter 'Auxiliary Programs' in the Febrl manual.
 
 4) dataset4a.csv and dataset4b.csv
 
-   python generate.py dataset4.csv 5000 5000 1 uniform
+   python generate.py febrl_004_5000_5000_1_u.csv 5000 5000 1 uniform
 
    Generated as one data set with 10000 records (5000 originals and
    5000 duplicates, with one duplicate per original), the originals

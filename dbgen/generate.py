@@ -162,7 +162,7 @@ dob_dict = {'name':'date_of_birth',
    'val_swap_prob':0.04,
     'spc_ins_prob':0.0,
     'spc_del_prob':0.0,
-       'miss_prob':0.02}
+       'miss_prob':0.10}
 
 gender_dict = {'name':'gender',
               'type':'freq',
@@ -175,7 +175,7 @@ gender_dict = {'name':'gender',
      'val_swap_prob':0.02,
       'spc_ins_prob':0.0,
       'spc_del_prob':0.0,
-         'miss_prob':0.05}
+         'miss_prob':0.01}
 
 ssid_dict = {'name':'soc_sec_id',
              'type':'iden',
@@ -189,13 +189,13 @@ ssid_dict = {'name':'soc_sec_id',
     'val_swap_prob':0.04,
      'spc_ins_prob':0.0,
      'spc_del_prob':0.0,
-        'miss_prob':0.02}
+        'miss_prob':0.10}
 
 phone_dict = {'name':'phone',
              'type':'iden',
        'char_range':'digit',
-         'start_id':1000000000,
-           'end_id':9999999999,
+         'start_id':10000000000,
+           'end_id':19999999999,
          'ins_prob':0.0,
          'del_prob':0.0,
          'sub_prob':0.02,
@@ -203,7 +203,7 @@ phone_dict = {'name':'phone',
     'val_swap_prob':0.04,
      'spc_ins_prob':0.0,
      'spc_del_prob':0.0,
-        'miss_prob':0.20}
+        'miss_prob':0.10}
 
 streetnumber_dict = {'name':'street_number',
                      'type':'freq',
@@ -229,7 +229,7 @@ address1_dict = {'name':'address_1',
         'val_swap_prob':0.02,
          'spc_ins_prob':0.05,
          'spc_del_prob':0.05,
-            'miss_prob':0.02}
+            'miss_prob':0.01}
 
 address2_dict = {'name':'address_2',
                  'type':'freq',
@@ -242,7 +242,7 @@ address2_dict = {'name':'address_2',
         'val_swap_prob':0.01,
          'spc_ins_prob':0.10,
          'spc_del_prob':0.05,
-            'miss_prob':0.09}
+            'miss_prob':0.10}
 
 suburb_dict = {'name':'suburb',
                'type':'freq',
@@ -255,9 +255,9 @@ suburb_dict = {'name':'suburb',
       'val_swap_prob':0.05,
        'spc_ins_prob':0.02,
        'spc_del_prob':0.01,
-          'miss_prob':0.01}
+          'miss_prob':0.10}
 
-postcode_dict = {'name':'zipcode',
+zip_dict = {'name':'zipcode',
                  'type':'freq',
            'char_range':'digit',
             'freq_file':'data/us_zipcode.csv',
@@ -268,12 +268,12 @@ postcode_dict = {'name':'zipcode',
         'val_swap_prob':0.01,
          'spc_ins_prob':0.0,
          'spc_del_prob':0.0,
-            'miss_prob':0.05}
+            'miss_prob':0.10}
 
 state_dict = {'name':'state',
               'type':'freq',
         'char_range':'alpha',
-         'freq_file':'data/state.csv',
+         'freq_file':'data/us_state.csv',
           'ins_prob':0.0,
           'del_prob':0.0,
           'sub_prob':0.01,
@@ -281,7 +281,7 @@ state_dict = {'name':'state',
      'val_swap_prob':0.02,
       'spc_ins_prob':0.0,
       'spc_del_prob':0.0,
-         'miss_prob':0.01}
+         'miss_prob':0.10}
 
 
 # -----------------------------------------------------------------------------
@@ -290,7 +290,7 @@ state_dict = {'name':'state',
 
 field_list = [givenname_dict, surname_dict, dob_dict, gender_dict,
               ssid_dict, phone_dict,
-              postcode_dict, streetnumber_dict, address1_dict, address2_dict, suburb_dict, state_dict]
+              zip_dict, streetnumber_dict, address1_dict, address2_dict, suburb_dict, state_dict]
 
 # -----------------------------------------------------------------------------
 # Flag for writing a header line (keys 'name' of field dictionaries)
