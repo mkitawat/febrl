@@ -26,11 +26,9 @@
 
 """Module generate.py - Auxiliary program to create records using various
                         frequency tables and introduce duplicates with errors.
-
    USAGE:
      python generate.py [output_file] [num_originals] [num_duplicates]
                         [max_duplicate_per_record] [distribution]     
-
    ARGUMENTS:
      output_file               Name of the output file (currently this is a
                                CSV file).
@@ -44,26 +42,19 @@
                                Possible are: - uniform
                                              - poisson
                                              - zipf
-
    DESCRIPTION:
      This program can be used to create a data set with records that contain
      randomly created names and addresses (using frequency files), dates and
      identifier numbers. Duplicate records will then be created following a
      given probability distribution, with various errors introduced.
-
      Various parameters on how theses duplicates are created can be given
      within the program, see below.
-
-
    TODO:
      - Fix ZIPF distribution
-
      - Allow various probability distributions for fields oftype 'date' and
        'iden' (using a new keyword in field dictionaries).
-
      - Try to find real world error distributions for typographical errors and
        integrate them into the random error creation
-
      - Add random word spilling between fields (similar to field swapping)
      - Improve performance (loading and creating frequency tables)
 """
@@ -77,7 +68,6 @@ import random
 import string
 import sys
 import time
-import xreadlines
 
 # Initialise random number generator  - - - - - - - - - - - - - - - - - - - - -
 #
@@ -135,7 +125,7 @@ givenname_dict = {'name':'given_name',
          'val_swap_prob':0.08,
           'spc_ins_prob':0.01,
           'spc_del_prob':0.00,
-             'miss_prob':0.02}
+             'miss_prob':0.01}
 
 surname_dict = {'name':'surname',
                 'type':'freq',
@@ -161,7 +151,7 @@ streetnumber_dict = {'name':'street_number',
             'val_swap_prob':0.10,
              'spc_ins_prob':0.0,
              'spc_del_prob':0.0,
-                'miss_prob':0.03}
+                'miss_prob':0.1}
 
 address1_dict = {'name':'address_1',
                  'type':'freq',
@@ -174,7 +164,7 @@ address1_dict = {'name':'address_1',
         'val_swap_prob':0.02,
          'spc_ins_prob':0.05,
          'spc_del_prob':0.05,
-            'miss_prob':0.02}
+            'miss_prob':0.1}
 
 address2_dict = {'name':'address_2',
                  'type':'freq',
@@ -187,7 +177,7 @@ address2_dict = {'name':'address_2',
         'val_swap_prob':0.01,
          'spc_ins_prob':0.10,
          'spc_del_prob':0.05,
-            'miss_prob':0.09}
+            'miss_prob':0.1}
 
 suburb_dict = {'name':'suburb',
                'type':'freq',
@@ -200,12 +190,12 @@ suburb_dict = {'name':'suburb',
       'val_swap_prob':0.05,
        'spc_ins_prob':0.02,
        'spc_del_prob':0.01,
-          'miss_prob':0.01}
+          'miss_prob':0.1}
 
-postcode_dict = {'name':'postcode',
+zip_dict = {'name':'zip',
                  'type':'freq',
            'char_range':'digit',
-            'freq_file':'data/postcode.csv',
+            'freq_file':'data/zip.csv',
              'ins_prob':0.00,
              'del_prob':0.00,
              'sub_prob':0.05,
@@ -213,7 +203,7 @@ postcode_dict = {'name':'postcode',
         'val_swap_prob':0.01,
          'spc_ins_prob':0.0,
          'spc_del_prob':0.0,
-            'miss_prob':0.0}
+            'miss_prob':0.1}
 
 state_dict = {'name':'state',
               'type':'freq',
@@ -226,7 +216,7 @@ state_dict = {'name':'state',
      'val_swap_prob':0.02,
       'spc_ins_prob':0.0,
       'spc_del_prob':0.0,
-         'miss_prob':0.01}
+         'miss_prob':0.1}
 
 dob_dict = {'name':'date_of_birth',
             'type':'date',
@@ -240,13 +230,13 @@ dob_dict = {'name':'date_of_birth',
    'val_swap_prob':0.04,
     'spc_ins_prob':0.0,
     'spc_del_prob':0.0,
-       'miss_prob':0.02}
+       'miss_prob':0.1}
 
 ssid_dict = {'name':'soc_sec_id',
              'type':'iden',
        'char_range':'digit',
-         'start_id':1000000,
-           'end_id':9999999,
+         'start_id':100000000,
+           'end_id':999999999,
          'ins_prob':0.0,
          'del_prob':0.0,
          'sub_prob':0.02,
@@ -254,15 +244,43 @@ ssid_dict = {'name':'soc_sec_id',
     'val_swap_prob':0.04,
      'spc_ins_prob':0.0,
      'spc_del_prob':0.0,
-        'miss_prob':0.00}
+        'miss_prob':0.1}
+
+phone_dict = {'name':'phone',
+              'type':'iden',
+        'char_range':'digit',
+          'start_id':10000000000,
+            'end_id':19999999999,
+          'ins_prob':0.0,
+          'del_prob':0.0,
+          'sub_prob':0.02,
+        'trans_prob':0.03,
+     'val_swap_prob':0.04,
+      'spc_ins_prob':0.0,
+      'spc_del_prob':0.0,
+         'miss_prob':0.1}
+
+gender_dict = {'name':'gender',
+               'type':'iden',
+         'char_range':'digit',
+           'start_id':0,
+             'end_id':2,
+           'ins_prob':0.0,
+           'del_prob':0.0,
+           'sub_prob':0.0,
+         'trans_prob':0.0,
+      'val_swap_prob':0.0,
+       'spc_ins_prob':0.0,
+       'spc_del_prob':0.0,
+          'miss_prob':0.01}
 
 # -----------------------------------------------------------------------------
 # Now add all field dictionaries into a list according to how they should be
 # saved in the output file
 
 field_list = [givenname_dict, surname_dict, streetnumber_dict, address1_dict,
-              address2_dict, suburb_dict, postcode_dict, state_dict,
-              dob_dict, ssid_dict]
+              address2_dict, suburb_dict, zip_dict, state_dict,
+              dob_dict, ssid_dict, phone_dict, gender_dict]
 
 # -----------------------------------------------------------------------------
 # Flag for writing a header line (keys 'name' of field dictionaries)
@@ -300,11 +318,9 @@ missing_value = ''
 def error_position(input_string, len_offset):
   """A function that randomly calculates an error position within the given
      input string and returns the position as integer number 0 or larger.
-
      The argument 'len_offset' can be set to an integer (e.g. -1, 0, or 1) and
      will give an offset relative to the string length of the maximal error
      position that can be returned.
-
      Errors do not likely appear at the beginning of a word, so a gauss random
      distribution is used with the mean being one position behind half the
      string length (and standard deviation 1.0)
@@ -469,17 +485,13 @@ def epoch_to_date(daynum):
      day, month and year being strings of length 2, 2, and 4, respectively.
      (based on a function from the 'normalDate.py' module by Jeff Bauer, see:
      http://starship.python.net/crew/jbauer/normalDate/)
-
   USAGE:
     [year, month, day] = epoch_to_date(daynum)
-
   ARGUMENTS:
     daynum  A integer giving the epoch day (0 = 1 January 1900)
-
   DESCRIPTION:
     Function for converting a number of days (integer value) since epoch time
     1 January 1900 (integer value) into a date tuple [day, month, year].
-
   EXAMPLES:
     [day, month, year] = epoch_to_date(0)      # returns ['01','01','1900']
     [day, month, year] = epoch_to_date(37734)  # returns ['25','04','2003']
@@ -544,19 +556,15 @@ def date_to_epoch(day, month, year):
   """ Convert a date [day, month, year] into an epoch day number.
      (based on a function from the 'normalDate.py' module by Jeff Bauer, see:
      http://starship.python.net/crew/jbauer/normalDate/)
-
   USAGE:
     daynum = date_to_epoch(year, month, day)
-
   ARGUMENTS:
     day    Day value (string or integer number)
     month  Month value (string or integer number)
     year   Year value (string or integer number)
-
   DESCRIPTION:
     Function for converting a date into a epoch day number (integer value)
     since 1 january 1900.
-
   EXAMPLES:
     day = date_to_epoch('01', '01', '1900')  # returns 0
     day = date_to_epoch('25', '04', '2003')  # returns 37734
@@ -862,7 +870,7 @@ for field_dict in field_list:
         raise Exception
       value_list = []  # List with all values of the frequency file
 
-      for line in xreadlines.xreadlines(fin):
+      for line in fin.xreadlines():
         line = line.strip()
         line_list = line.split(',')
         if (len(line_list) != 2):
