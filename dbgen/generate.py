@@ -77,7 +77,7 @@ import random
 import string
 import sys
 import time
-import xreadlines
+# import xreadlines
 
 # Initialise random number generator  - - - - - - - - - - - - - - - - - - - - -
 #
@@ -85,7 +85,7 @@ random.seed()
 
 # Set the following flag to True for verbose output, otherwise to False - - - -
 #
-VERBOSE_OUTPUT = True
+VERBOSE_OUTPUT = False
 
 # =============================================================================
 #
@@ -132,10 +132,10 @@ givenname_dict = {'name':'given_name',
               'del_prob':0.04,
               'sub_prob':0.05,
             'trans_prob':0.03,
-         'val_swap_prob':0.08,
+         'val_swap_prob':0.01,
           'spc_ins_prob':0.01,
           'spc_del_prob':0.00,
-             'miss_prob':0.02}
+             'miss_prob':0.00}
 
 surname_dict = {'name':'surname',
                 'type':'freq',
@@ -145,10 +145,65 @@ surname_dict = {'name':'surname',
               'del_prob':0.04,
               'sub_prob':0.06,
             'trans_prob':0.05,
-         'val_swap_prob':0.05,
+         'val_swap_prob':0.01,
           'spc_ins_prob':0.01,
           'spc_del_prob':0.01,
-             'miss_prob':0.01}
+             'miss_prob':0.00}
+
+dob_dict = {'name':'date_of_birth',
+            'type':'date',
+      'char_range':'digit',
+      'start_date':(01,01,1910),
+        'end_date':(31,12,2015),
+        'ins_prob':0.0,
+        'del_prob':0.0,
+        'sub_prob':0.01,
+      'trans_prob':0.01,
+   'val_swap_prob':0.04,
+    'spc_ins_prob':0.0,
+    'spc_del_prob':0.0,
+       'miss_prob':0.02}
+
+gender_dict = {'name':'gender',
+              'type':'freq',
+        'char_range':'alpha',
+         'freq_file':'data/gender.csv',
+          'ins_prob':0.0,
+          'del_prob':0.0,
+          'sub_prob':0.0,
+        'trans_prob':0.0,
+     'val_swap_prob':0.02,
+      'spc_ins_prob':0.0,
+      'spc_del_prob':0.0,
+         'miss_prob':0.05}
+
+ssid_dict = {'name':'soc_sec_id',
+             'type':'iden',
+       'char_range':'digit',
+         'start_id':1000,
+           'end_id':9999,
+         'ins_prob':0.0,
+         'del_prob':0.0,
+         'sub_prob':0.02,
+       'trans_prob':0.03,
+    'val_swap_prob':0.04,
+     'spc_ins_prob':0.0,
+     'spc_del_prob':0.0,
+        'miss_prob':0.02}
+
+phone_dict = {'name':'phone',
+             'type':'iden',
+       'char_range':'digit',
+         'start_id':1000000000,
+           'end_id':9999999999,
+         'ins_prob':0.0,
+         'del_prob':0.0,
+         'sub_prob':0.02,
+       'trans_prob':0.03,
+    'val_swap_prob':0.04,
+     'spc_ins_prob':0.0,
+     'spc_del_prob':0.0,
+        'miss_prob':0.20}
 
 streetnumber_dict = {'name':'street_number',
                      'type':'freq',
@@ -161,7 +216,7 @@ streetnumber_dict = {'name':'street_number',
             'val_swap_prob':0.10,
              'spc_ins_prob':0.0,
              'spc_del_prob':0.0,
-                'miss_prob':0.03}
+                'miss_prob':0.10}
 
 address1_dict = {'name':'address_1',
                  'type':'freq',
@@ -202,10 +257,10 @@ suburb_dict = {'name':'suburb',
        'spc_del_prob':0.01,
           'miss_prob':0.01}
 
-postcode_dict = {'name':'postcode',
+postcode_dict = {'name':'zipcode',
                  'type':'freq',
            'char_range':'digit',
-            'freq_file':'data/postcode.csv',
+            'freq_file':'data/us_zipcode.csv',
              'ins_prob':0.00,
              'del_prob':0.00,
              'sub_prob':0.05,
@@ -213,7 +268,7 @@ postcode_dict = {'name':'postcode',
         'val_swap_prob':0.01,
          'spc_ins_prob':0.0,
          'spc_del_prob':0.0,
-            'miss_prob':0.0}
+            'miss_prob':0.05}
 
 state_dict = {'name':'state',
               'type':'freq',
@@ -228,41 +283,14 @@ state_dict = {'name':'state',
       'spc_del_prob':0.0,
          'miss_prob':0.01}
 
-dob_dict = {'name':'date_of_birth',
-            'type':'date',
-      'char_range':'digit',
-      'start_date':(01,01,1900),
-        'end_date':(31,12,1999),
-        'ins_prob':0.0,
-        'del_prob':0.0,
-        'sub_prob':0.01,
-      'trans_prob':0.01,
-   'val_swap_prob':0.04,
-    'spc_ins_prob':0.0,
-    'spc_del_prob':0.0,
-       'miss_prob':0.02}
-
-ssid_dict = {'name':'soc_sec_id',
-             'type':'iden',
-       'char_range':'digit',
-         'start_id':1000000,
-           'end_id':9999999,
-         'ins_prob':0.0,
-         'del_prob':0.0,
-         'sub_prob':0.02,
-       'trans_prob':0.03,
-    'val_swap_prob':0.04,
-     'spc_ins_prob':0.0,
-     'spc_del_prob':0.0,
-        'miss_prob':0.00}
 
 # -----------------------------------------------------------------------------
 # Now add all field dictionaries into a list according to how they should be
 # saved in the output file
 
-field_list = [givenname_dict, surname_dict, streetnumber_dict, address1_dict,
-              address2_dict, suburb_dict, postcode_dict, state_dict,
-              dob_dict, ssid_dict]
+field_list = [givenname_dict, surname_dict, dob_dict, gender_dict,
+              ssid_dict, phone_dict,
+              postcode_dict, streetnumber_dict, address1_dict, address2_dict, suburb_dict, state_dict]
 
 # -----------------------------------------------------------------------------
 # Flag for writing a header line (keys 'name' of field dictionaries)
@@ -274,7 +302,7 @@ save_header = True  # Set to 'False' if no header should be written
 # Use field names as defined in the field directories (keys 'name').
 
 field_swap_prob = {('address_1', 'address_2'):0.05,
-                   ('given_name', 'surname'):0.07}
+                   ('given_name', 'surname'):0.03}
 
 # -----------------------------------------------------------------------------
 # Probabilities (between 0.0 and 1.0) for creating a typographical error (a new
@@ -862,7 +890,7 @@ for field_dict in field_list:
         raise Exception
       value_list = []  # List with all values of the frequency file
 
-      for line in xreadlines.xreadlines(fin):
+      for line in fin:
         line = line.strip()
         line_list = line.split(',')
         if (len(line_list) != 2):
@@ -908,7 +936,7 @@ while (rec_cnt < num_org_records):
 
     # Randomly set field values to missing
     #
-    if (random.random() <= field_dict['miss_prob']):
+    if (random.random() < field_dict['miss_prob']):
       rand_val = missing_value
 
     elif (field_dict['type'] == 'freq'):  # A frequency file based field
@@ -919,7 +947,7 @@ while (rec_cnt < num_org_records):
       rand_num = random.randint(field_dict['start_epoch'], \
                                 field_dict['end_epoch']-1)
       rand_date = epoch_to_date(rand_num)
-      rand_val = rand_date[2]+rand_date[1]+rand_date[0]  # ISO format: yyyymmdd
+      rand_val = rand_date[2]+rand_date[1]+rand_date[0]  # ISO format: yyyy-mm-dd
 
     elif (field_dict['type'] == 'iden'):  # A identification number field
       rand_num = random.randint(field_dict['start_id'], \
@@ -1023,7 +1051,7 @@ while (rec_cnt < num_dup_records):
       #
       if (dup_field_val == None):
 
-        if (random.random() > field_dict['miss_prob']):
+        if (random.random() >= field_dict['miss_prob']):
           dup_field_val = missing_value  # Leave it as missing value
 
         else:  # Create a new value
@@ -1301,7 +1329,7 @@ if (save_header == True):
   for field_name in field_name_list:
     header_line = header_line + field_name+ ', '
   header_line = header_line[:-2]
-  f_out.write(header_line+os.linesep)
+  f_out.write(header_line+'\n') # f_out.write(header_line+os.linesep)
 
 # Loop over all record IDs
 #
@@ -1315,7 +1343,7 @@ for rec_id in all_rec_ids:
   #
   out_line = out_line[:-2]
   # print out_line
-  f_out.write(out_line+os.linesep)
+  f_out.write(out_line+'\n') # f_out.write(out_line+os.linesep)
 
 f_out.close()
 
